@@ -1,29 +1,21 @@
 # Act
 
-TODO: Write a gem description
+Allows to act on files from the command line efficiently... `cat` for the twenty first century!
+
+![act](http://cl.ly/image/0D2b2Y201l1E/Image%202014-04-04%20at%201.00.16%20am.png)
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'act'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install act
+```console
+$ gem install act
+$ [sudo] easy_install Pygments #optional
+```
 
 ## Usage
 
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/act/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+```
+$ act statistics.rb
+$ act statistics.rb:178
+$ act --open statistics.rb:178
+$ act --help
+```
