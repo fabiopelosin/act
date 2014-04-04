@@ -2,6 +2,8 @@ require 'bundler/gem_tasks'
 
 task :default => :spec
 
+Rake::Task[:release].enhance [:spec]
+
 # Bootstrap
 #-----------------------------------------------------------------------------#
 
