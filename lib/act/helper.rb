@@ -5,12 +5,6 @@ require 'open3'
 module Act
   module Helper
 
-
-    FileInformation = Struct.new(:path, :from_line, :to_line)
-
-    def self.parse_file_information(string)
-    end
-
     # @return [String]
     #
     def self.open_in_editor_command(path, line)
@@ -37,10 +31,15 @@ module Act
       end_line = line + context_lines - 1
     end
 
-    # @return [String]
+    # @return [String, Nil]
     #
     def self.select_lines(string, start_line, end_line)
-      string.lines[start_line..end_line].join
+      start_line = start_line - 1
+      end_line = end_line - 1
+      start_line = 0 if start_line < 0
+      end_line = 0 if end_line < 0
+      components = string.lines[start_line..end_line]
+      components.join if components && !components.empty?
     end
 
     # @return [String]
@@ -52,13 +51,14 @@ module Act
     # @return [String]
     #
     def self.add_line_numbers(string, start_line, highlight_line = nil)
+      start_line ||= 0
       line_count = start_line
       numbered_lines = string.lines.map do |line|
-        line_count += 1
         number = line_count.to_s.ljust(3)
         if highlight_line && highlight_line == line_count
           number = number.yellow
         end
+        line_count += 1
         "#{number}  #{line}"
       end
       numbered_lines.join

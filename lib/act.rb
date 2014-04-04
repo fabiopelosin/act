@@ -1,6 +1,9 @@
-require "act/version"
 
 module Act
-  require 'act/helper'
+  require "act/version"
+  require 'act/argument_parser'
   require 'act/command'
+  require 'act/helper'
+  require 'act/user_interface'
+  require 'pathname'
 end

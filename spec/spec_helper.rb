@@ -12,3 +12,26 @@ require 'mocha-on-bacon'
 require 'pretty_bacon'
 require 'act'
 
+# Silence the output
+#--------------------------------------#
+
+module Act
+  module UI
+    @output = ''
+    @warnings = ''
+
+    class << self
+      attr_accessor :output
+      attr_accessor :warnings
+    end
+
+    def self.puts(message)
+      @output << message
+    end
+
+    def self.warn(message)
+      @warnings << message
+    end
+  end
+end
+

@@ -19,7 +19,7 @@ module Act
     def self.run(argv)
       argv = CLAide::ARGV.new(argv)
       if argv.flag?('version')
-        puts VERSION
+        UI.puts VERSION
         exit 0
       end
       super(argv)
@@ -28,45 +28,82 @@ module Act
     def initialize(argv)
       @open = argv.flag?('open')
       @number_lines = argv.flag?('line-numbers', true)
-      @file = argv.shift_argument
+      @file_string = argv.shift_argument
       super
     end
 
     def validate!
       super
-      help! "A file is required." unless @file
+      help! "A file is required." unless @file_string
     end
 
+    CONTEXT_LINES = 5
+
     def run
-      file_information = @file.split(':')
-      path = file_information[0]
-      line = file_information[1]
-      context_lines = 5
+      clean_file_string = pre_process_file_string(@file_string)
+      file = ArgumentParser.parse_file_information(clean_file_string, CONTEXT_LINES)
 
-      if @open
-        command = Helper.open_in_editor_command(path, line)
-        system(command)
-      else
-        string = File.read(path) if File.exists?(path)
+      path_exists = File.exists?(file.path)
+      unless path_exists
+        inferred = infer_local_path(file.path)
+        file.path = inferred
+        path_exists = true if inferred
+      end
 
-        if string
-          if line
-            line = line.to_i
-            start_line = Helper.start_line(string, line, context_lines)
-            end_line = Helper.end_line(string, line, context_lines)
-            string = Helper.select_lines(string, start_line, end_line)
-            puts "Showing from line #{start_line} to #{end_line}"
-          end
-
-          string = Helper.strip_indentation(string)
-          string = Helper.syntax_highlith(string, path) if self.ansi_output?
-          string = Helper.add_line_numbers(string, start_line, line) if @number_lines
-
-          puts
-          puts string
+      if path_exists
+        if @open
+          open_file(file)
         else
-          puts "[!] File not found"
+          cat_file(file)
         end
+      else
+        UI.warn "[!] File not found"
+      end
+    end
+
+    # @return [String]
+    #
+    def pre_process_file_string(string)
+      string.sub(/https?:\/\//, '')
+    end
+
+    # @return [String, Nil]
+    #
+    def infer_local_path(path)
+      path_components = Pathname(path).each_filename.to_a
+      while !path_components.empty?
+        path_components.shift
+        candidate = File.join(path_components)
+        if File.exists?(candidate)
+          return candidate
+        end
+      end
+    end
+
+    # @return [void]
+    #
+    def open_file(file)
+      line = file.highlight_line || file.from_line
+      command = Helper.open_in_editor_command(file.path, line)
+      UI.puts command if self.verbose?
+      system(command)
+    end
+
+    # @return [void]
+    #
+    def cat_file(file)
+      string = File.read(file.path)
+      if file.from_line && file.to_line
+        string = Helper.select_lines(string, file.from_line, file.to_line)
+      end
+
+      if string
+        string = Helper.strip_indentation(string)
+        string = Helper.syntax_highlith(string, file.path) if self.ansi_output?
+        string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines
+        UI.puts "\nstring"
+      else
+        UI.warn "[!] Nothing to show"
       end
     end
 

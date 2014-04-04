@@ -30,8 +30,8 @@ namespace :spec do
     title 'Running Unit Tests'
     sh "bundle exec bacon #{specs('**')}"
 
-    title 'Checking code style...'
-    Rake::Task['rubocop'].invoke
+    # title 'Checking code style...'
+    # Rake::Task['rubocop'].invoke
   end
 end
 
