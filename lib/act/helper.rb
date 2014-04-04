@@ -50,7 +50,7 @@ module Act
     # @return [String]
     #
     def self.add_line_numbers(string, start_line, highlight_line = nil)
-      start_line ||= 0
+      start_line ||= 1
       line_count = start_line
       numbered_lines = string.lines.map do |line|
         number = line_count.to_s.ljust(3)
