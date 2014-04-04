@@ -1,9 +1,7 @@
 module Act
-
   # Manages the UI output.
   #
   module UserInterface
-
     def self.puts(message)
       STDOUT.puts message
     end
@@ -15,4 +13,3 @@ module Act
 
   UI = UserInterface
 end
-

@@ -4,7 +4,6 @@ require 'open3'
 
 module Act
   module Helper
-
     # @return [String]
     #
     def self.open_in_editor_command(path, line)
@@ -79,4 +78,3 @@ module Act
     end
   end
 end
-

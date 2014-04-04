@@ -4,14 +4,13 @@ require 'active_support/core_ext/string/strip'
 
 module Act
   class Command < CLAide::Command
-
     self.command = 'act'
     self.description = 'Act the command line tool to act on files'
 
     def self.options
       [
-        ['--open', "Open the file in $EDITOR instead of printing it"],
-        ['--no-line-numbers', "Show output without line numbers"],
+        ['--open', 'Open the file in $EDITOR instead of printing it'],
+        ['--no-line-numbers', 'Show output without line numbers'],
         ['--version', 'Show the version of Act'],
       ].concat(super)
     end
@@ -34,7 +33,7 @@ module Act
 
     def validate!
       super
-      help! "A file is required." unless @file_string
+      help! 'A file is required.' unless @file_string
     end
 
     CONTEXT_LINES = 5
@@ -43,7 +42,7 @@ module Act
       clean_file_string = pre_process_file_string(@file_string)
       file = ArgumentParser.parse_file_information(clean_file_string, CONTEXT_LINES)
 
-      path_exists = File.exists?(file.path)
+      path_exists = File.exist?(file.path)
       unless path_exists
         inferred = infer_local_path(file.path)
         file.path = inferred
@@ -57,7 +56,7 @@ module Act
           cat_file(file)
         end
       else
-        UI.warn "[!] File not found"
+        UI.warn '[!] File not found'
       end
     end
 
@@ -71,10 +70,10 @@ module Act
     #
     def infer_local_path(path)
       path_components = Pathname(path).each_filename.to_a
-      while !path_components.empty?
+      until path_components.empty?
         path_components.shift
         candidate = File.join(path_components)
-        if File.exists?(candidate)
+        if File.exist?(candidate)
           return candidate
         end
       end
@@ -103,9 +102,8 @@ module Act
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines
         UI.puts "\nstring"
       else
-        UI.warn "[!] Nothing to show"
+        UI.warn '[!] Nothing to show'
       end
     end
-
   end
 end

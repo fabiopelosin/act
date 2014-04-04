@@ -9,9 +9,9 @@ module Act
 
     #-------------------------------------------------------------------------#
 
-    describe "parse_file_information" do
+    describe 'parse_file_information' do
 
-      it "handles paths" do
+      it 'handles paths' do
         file = 'lib/act/command.rb'
         context_lines = 5
         result = @subject.parse_file_information(file)
@@ -21,13 +21,13 @@ module Act
         result.highlight_line.should.be.nil
       end
 
-      it "returns nil if no file information has been provided" do
+      it 'returns nil if no file information has been provided' do
         file = nil
         result = @subject.parse_file_information(file)
         result.should.be.nil
       end
 
-      it "handles paths where the line number is specified by a colon" do
+      it 'handles paths where the line number is specified by a colon' do
         file = 'lib/act/command.rb:10'
         context_lines = 5
         result = @subject.parse_file_information(file, context_lines)
@@ -37,7 +37,7 @@ module Act
         result.highlight_line.should == 10
       end
 
-      it "handles paths which include the column number" do
+      it 'handles paths which include the column number' do
         file = 'lib/act/command.rb:10:2'
         context_lines = 5
         result = @subject.parse_file_information(file, context_lines)
@@ -47,7 +47,7 @@ module Act
         result.highlight_line.should == 10
       end
 
-      it "handles line ranges" do
+      it 'handles line ranges' do
         file = 'lib/act/command.rb:10-12'
         context_lines = 5
         result = @subject.parse_file_information(file, context_lines)
@@ -57,7 +57,7 @@ module Act
         result.highlight_line.should.be.nil
       end
 
-      it "handles the specification of a custom context" do
+      it 'handles the specification of a custom context' do
         file = 'lib/act/command.rb:10+2'
         context_lines = 5
         result = @subject.parse_file_information(file, context_lines)
@@ -92,4 +92,3 @@ module Act
 
   end
 end
-

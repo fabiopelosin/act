@@ -9,7 +9,7 @@ module Act
 
     #-------------------------------------------------------------------------#
 
-    describe "select_lines" do
+    describe 'select_lines' do
 
       it 'returns the lines corresponding to the given range' do
         string = "1\n2\n3\n4"

@@ -1,6 +1,5 @@
 module Act
   module ArgumentParser
-
     FileInformation = Struct.new(:path, :from_line, :to_line, :highlight_line)
 
     # @return [FileInformation]
@@ -28,7 +27,7 @@ module Act
               from_line = highlight_line - context
               to_line = highlight_line + context
             else
-              UI.warn "Unable to parse line data"
+              UI.warn 'Unable to parse line data'
             end
           end
         elsif file =~ /#/
@@ -46,7 +45,7 @@ module Act
               from_line = line_components[0][1..-1].to_i
               to_line = line_components[1][1..-1].to_i
             else
-              UI.warn "Unable to parse line data"
+              UI.warn 'Unable to parse line data'
             end
           end
         else
@@ -61,8 +60,5 @@ module Act
         result
       end
     end
-
   end
 end
-
-

@@ -34,4 +34,3 @@ module Act
     end
   end
 end
-
