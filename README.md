@@ -3,7 +3,7 @@
 
 Allows to act on files from the command line efficiently... `cat` for the twenty first century!
 
-<img src="http://cl.ly/image/0D2b2Y201l1E/Image%202014-04-04%20at%201.00.16%20am.png" height="50%" width="50%">
+<img src="http://cl.ly/image/0A2p320r442D/Image%202014-04-04%20at%202.59.18%20pm.png" height="50%" width="50%">
 
 ### Features
 
