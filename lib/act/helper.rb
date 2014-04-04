@@ -5,6 +5,12 @@ require 'open3'
 module Act
   module Helper
 
+
+    FileInformation = Struct.new(:path, :from_line, :to_line)
+
+    def self.parse_file_information(string)
+    end
+
     # @return [String]
     #
     def self.open_in_editor_command(path, line)
