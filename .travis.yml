@@ -1,0 +1,7 @@
+language: ruby
+bundler_args: --without debugging
+rvm:
+  - 2.0.0
+
+install: NOEXEC=skip rake bootstrap
+script: bundle exec rake spec
