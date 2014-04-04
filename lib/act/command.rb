@@ -100,7 +100,7 @@ module Act
         string = Helper.strip_indentation(string)
         string = Helper.syntax_highlith(string, file.path) if self.ansi_output?
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines
-        UI.puts "\nstring"
+        UI.puts "\n#{string}"
       else
         UI.warn '[!] Nothing to show'
       end
