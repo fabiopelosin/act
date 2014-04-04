@@ -8,9 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Act::VERSION
   spec.authors       = ["Fabio Pelosin"]
   spec.email         = ["fabiopelosin@gmail.com"]
-  spec.summary       = %q{Act the command line tool to act on files}
-  # spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Act the command line tool to act on files.}
+  spec.homepage      = "https://github.com/irrationalfab/act"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
