@@ -11,7 +11,7 @@ Allows to act on files from the command line efficiently... `cat` for the twenty
   - Support for colon syntax
   - Support for GitHub like URLs
 - Automatic syntax highlighting based on the file extension (via [Pygments](http://pygments.org))
-- Fast enoguht for the task
+- Fast enough for the task
 
 ## Installation
 
