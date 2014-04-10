@@ -68,13 +68,26 @@ module Act
     def self.syntax_highlith(string, file_name)
       return string if `which gen_bridge_metadata`.strip.empty?
       result = nil
-      lexer = `pygmentize -N #{file_name}`.chomp
+      lexer = lexer(file_name)
       Open3.popen3("pygmentize -l #{lexer}") do |stdin, stdout, stderr|
         stdin.write(string)
         stdin.close_write
         result = stdout.read
       end
       result
+    end
+
+    def self.lexer(file_name)
+      lexer = `pygmentize -N #{file_name}`.chomp
+      if lexer == 'text'
+        lexer = case file_name
+        when 'Gemfile', 'Rakefile', 'Podfile'
+          'rb'
+        when 'Podfile.lock', 'Gemfile.lock'
+          'yaml'
+        end
+      end
+      lexer
     end
   end
 end

@@ -51,5 +51,21 @@ module Act
 
     #-------------------------------------------------------------------------#
 
+    describe 'lexer' do
+      it 'infers the lexer according to the extension using pygmentize' do
+        file_name = 'test.rb'
+        result = @subject.lexer(file_name)
+        result.should == 'rb'
+      end
+
+      it 'infers the lexer according to the file name' do
+        file_name = 'Gemfile'
+        result = @subject.lexer(file_name)
+        result.should == 'rb'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
