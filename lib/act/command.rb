@@ -33,30 +33,33 @@ module Act
 
     def validate!
       super
-      help! 'A file is required.' unless @file_string
+      help! 'A file is required.' unless @file_string || @open
     end
 
     CONTEXT_LINES = 5
 
     def run
+      @file_string ||= '.'
       clean_file_string = pre_process_file_string(@file_string)
       file = ArgumentParser.parse_file_information(clean_file_string, CONTEXT_LINES)
 
       path_exists = File.exist?(file.path)
       unless path_exists
         inferred = infer_local_path(file.path)
-        file.path = inferred
-        path_exists = true if inferred
+        if inferred
+          file.path = inferred
+          path_exists = true
+        end
       end
 
-      if path_exists
-        if @open
-          open_file(file)
-        else
-          cat_file(file)
-        end
+      if @open
+        open_file(file)
       else
-        UI.warn '[!] File not found'
+        if path_exists
+          cat_file(file)
+        else
+          UI.warn '[!] File not found'
+        end
       end
     end
 
