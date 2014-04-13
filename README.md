@@ -1,7 +1,7 @@
 # Act
 [![Build Status](https://travis-ci.org/irrationalfab/act.svg?branch=master)](https://travis-ci.org/irrationalfab/act)
 
-Allows to act on files from the command line efficiently... `cat` for the twenty first century!
+Preview files from the command line efficiently. `cat` for the twenty first century!
 
 <img src="http://cl.ly/image/0A2p320r442D/Image%202014-04-04%20at%202.59.18%20pm.png" height="50%" width="50%">
 
