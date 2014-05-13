@@ -63,13 +63,37 @@ module Act
       numbered_lines.join
     end
 
+    def self.lexer(file_name)
+      case file_name
+      when 'Gemfile', 'Rakefile', 'Podfile'
+        'rb'
+      when 'Podfile.lock', 'Gemfile.lock'
+        'yaml'
+      else
+        `pygmentize -N #{file_name}`.chomp
+      end
+    end
+
+    def self.prettify(string, lexer)
+      raise ArgumentError unless string
+      raise ArgumentError unless lexer
+      p lexer
+      case lexer
+      when 'json'
+        require 'json'
+        JSON.pretty_generate(JSON.parse(string))
+      else
+        string
+      end
+    end
+
     # @return [String]
     #
-    def self.syntax_highlith(string, file_name)
+    def self.syntax_highlith(string, lexer)
+      raise ArgumentError unless string
+      raise ArgumentError unless lexer
       return string if `which pygmentize`.strip.empty?
       result = nil
-      lexer = lexer(file_name)
-      return string unless lexer
       Open3.popen3("pygmentize -l #{lexer}") do |stdin, stdout, stderr|
         stdin.write(string)
         stdin.close_write
@@ -78,17 +102,5 @@ module Act
       result
     end
 
-    def self.lexer(file_name)
-      lexer = `pygmentize -N #{file_name}`.chomp
-      if lexer == 'text'
-        lexer = case file_name
-        when 'Gemfile', 'Rakefile', 'Podfile'
-          'rb'
-        when 'Podfile.lock', 'Gemfile.lock'
-          'yaml'
-        end
-      end
-      lexer
-    end
   end
 end

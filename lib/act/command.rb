@@ -10,8 +10,9 @@ module Act
     def self.options
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
+        ['--prettify', "Don't prettify output"],
         ['--no-line-numbers', 'Show output without line numbers'],
-        ['--version', 'Show the version of Act'],
+        ['--version', 'Show the version of Act']
       ].concat(super)
     end
 
@@ -26,6 +27,7 @@ module Act
 
     def initialize(argv)
       @open = argv.flag?('open')
+      @prettify = argv.flag?('prettify', false)
       @number_lines = argv.flag?('line-numbers', true)
       @file_string = argv.shift_argument
       super
@@ -100,8 +102,10 @@ module Act
       end
 
       if string
+        lexer = Helper.lexer(file.path)
         string = Helper.strip_indentation(string)
-        string = Helper.syntax_highlith(string, file.path) if self.ansi_output?
+        string = Helper.prettify(string, lexer) if @prettify
+        string = Helper.syntax_highlith(string, lexer) if self.ansi_output?
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines
         UI.puts "\n#{string}"
       else
