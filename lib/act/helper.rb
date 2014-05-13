@@ -70,14 +70,17 @@ module Act
       when 'Podfile.lock', 'Gemfile.lock'
         'yaml'
       else
-        `pygmentize -N #{file_name}`.chomp
+        if file_name
+          `pygmentize -N #{file_name}`.chomp
+        else
+          'text'
+        end
       end
     end
 
     def self.prettify(string, lexer)
       raise ArgumentError unless string
       raise ArgumentError unless lexer
-      p lexer
       case lexer
       when 'json'
         require 'json'

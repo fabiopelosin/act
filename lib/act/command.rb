@@ -5,42 +5,60 @@ require 'active_support/core_ext/string/strip'
 module Act
   class Command < CLAide::Command
     self.command = 'act'
-    self.description = 'Act the command line tool to act on files'
+
+    self.description = <<-DOC
+      Act the command line tool to act on files
+
+      Prints the contents of the file at `PATH`.
+
+    DOC
+
+    def self.arguments
+      [
+        ['PATH', :optional],
+      ]
+    end
 
     def self.options
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
         ['--prettify', "Don't prettify output"],
         ['--line-numbers', 'Show output without line numbers'],
-        ['--version', 'Show the version of Act']
+        ['--lexer=NAME', 'Use the given lexer'],
       ].concat(super)
     end
 
-    def self.run(argv)
-      argv = CLAide::ARGV.new(argv)
-      if argv.flag?('version')
-        UI.puts VERSION
-        exit 0
-      end
-      super(argv)
+    def self.completion_description
+      description = super
+      # _path_files function
+      description[:paths] = :all_files
+      description
     end
 
     def initialize(argv)
+      @stdin = STDIN.read unless STDIN.tty?
       @open = argv.flag?('open')
       @prettify = argv.flag?('prettify', false)
       @number_lines = argv.flag?('line-numbers', false)
+      @lexer = argv.option('lexer', false)
       @file_string = argv.shift_argument
       super
     end
 
     def validate!
       super
-      help! 'A file is required.' unless @file_string || @open
+      help! 'A file is required.' unless @file_string || @open || @stdin
     end
 
     CONTEXT_LINES = 5
 
     def run
+      if @stdin && !@open
+        cat_string(@stdin)
+        return
+      end
+
+
       @file_string ||= '.'
       clean_file_string = pre_process_file_string(@file_string)
       file = ArgumentParser.parse_file_information(clean_file_string, CONTEXT_LINES)
@@ -90,7 +108,13 @@ module Act
       line = file.highlight_line || file.from_line
       command = Helper.open_in_editor_command(file.path, line)
       UI.puts command if self.verbose?
-      system(command)
+      if defined? Bundler
+        Bundler.with_clean_env do
+          system(command)
+        end
+      else
+        system(command)
+      end
     end
 
     # @return [void]
@@ -100,13 +124,17 @@ module Act
       if file.from_line && file.to_line
         string = Helper.select_lines(string, file.from_line, file.to_line)
       end
+      cat_string(string, file)
+    end
 
+    def cat_string(string, file = nil)
       if string
-        lexer = Helper.lexer(file.path)
+        path = file.path if file
+        @lexer ||= Helper.lexer(path)
         string = Helper.strip_indentation(string)
-        string = Helper.prettify(string, lexer) if @prettify
-        string = Helper.syntax_highlith(string, lexer) if self.ansi_output?
-        string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines
+        string = Helper.prettify(string, @lexer) if @prettify
+        string = Helper.syntax_highlith(string, @lexer) if self.ansi_output?
+        string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines && file
         UI.puts "\n#{string}"
       else
         UI.warn '[!] Nothing to show'
