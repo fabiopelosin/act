@@ -69,6 +69,7 @@ module Act
       return string if `which pygmentize`.strip.empty?
       result = nil
       lexer = lexer(file_name)
+      return string unless lexer
       Open3.popen3("pygmentize -l #{lexer}") do |stdin, stdout, stderr|
         stdin.write(string)
         stdin.close_write
