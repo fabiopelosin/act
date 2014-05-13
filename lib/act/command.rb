@@ -11,7 +11,7 @@ module Act
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
         ['--prettify', "Don't prettify output"],
-        ['--no-line-numbers', 'Show output without line numbers'],
+        ['--line-numbers', 'Show output without line numbers'],
         ['--version', 'Show the version of Act']
       ].concat(super)
     end
@@ -28,7 +28,7 @@ module Act
     def initialize(argv)
       @open = argv.flag?('open')
       @prettify = argv.flag?('prettify', false)
-      @number_lines = argv.flag?('line-numbers', true)
+      @number_lines = argv.flag?('line-numbers', false)
       @file_string = argv.shift_argument
       super
     end
