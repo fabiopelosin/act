@@ -22,7 +22,7 @@ module Act
     def self.options
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
-        ['--prettify', "Don't prettify output"],
+        ['--prettify', 'Prettify output'],
         ['--line-numbers', 'Show output without line numbers'],
         ['--lexer=NAME', 'Use the given lexer'],
       ].concat(super)
