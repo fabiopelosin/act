@@ -97,10 +97,14 @@ module Act
       raise ArgumentError unless lexer
       return string if `which pygmentize`.strip.empty?
       result = nil
-      Open3.popen3("pygmentize -l #{lexer}") do |stdin, stdout, stderr|
+      Open3.popen3("pygmentize -l #{lexer} -O encoding=utf8") do |stdin, stdout, stderr, wait_thr|
         stdin.write(string)
         stdin.close_write
         result = stdout.read
+        unless wait_thr.value.success?
+          warn '[!] Syntax highlighting via the pygmentize tool failed'
+          result = string
+        end
       end
       result
     end
