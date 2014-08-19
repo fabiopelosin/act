@@ -23,7 +23,7 @@ module Act
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
         ['--prettify', 'Prettify output'],
-        ['--line-numbers', 'Show output without line numbers'],
+        ['--line-numbers', 'Show output with line numbers'],
         ['--lexer=NAME', 'Use the given lexer'],
       ].concat(super)
     end
