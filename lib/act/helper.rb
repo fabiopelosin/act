@@ -64,18 +64,11 @@ module Act
       numbered_lines.join
     end
 
-    def self.lexer(file_name)
-      case file_name
-      when 'Gemfile', 'Rakefile', 'Podfile'
-        'rb'
-      when 'Podfile.lock', 'Gemfile.lock'
-        'yaml'
+    def self.lexer(file_name, string = nil)
+      if string
+        Rouge::Lexer.guess(:filename => file_name, :source => string).tag
       else
-        if file_name
-          `pygmentize -N #{file_name}`.chomp
-        else
-          'text'
-        end
+        Rouge::Lexer.guess_by_filename(file_name).tag
       end
     end
 
