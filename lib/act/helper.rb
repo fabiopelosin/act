@@ -1,6 +1,7 @@
 require 'colored'
 require 'active_support/core_ext/string/strip'
 require 'open3'
+require 'rouge'
 
 module Act
   module Helper
@@ -92,21 +93,9 @@ module Act
 
     # @return [String]
     #
-    def self.syntax_highlith(string, lexer)
-      raise ArgumentError unless string
-      raise ArgumentError unless lexer
-      return string if `which pygmentize`.strip.empty?
-      result = nil
-      Open3.popen3("pygmentize -l #{lexer} -O encoding=utf8") do |stdin, stdout, stderr, wait_thr|
-        stdin.write(string)
-        stdin.close_write
-        result = stdout.read
-        unless wait_thr.value.success?
-          warn '[!] Syntax highlighting via the pygmentize tool failed'
-          result = string
-        end
-      end
-      result
+    def self.syntax_highlight(string, lexer)
+      formatter = Rouge::Formatters::Terminal256.new(:theme => 'monokai')
+      Rouge.highlight(string, lexer, formatter)
     end
 
   end
