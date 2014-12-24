@@ -15,7 +15,7 @@ module Act
 
     def self.arguments
       [
-        ['PATH', :optional],
+        CLAide::Argument.new('PATH', false),
       ]
     end
 
