@@ -130,10 +130,10 @@ module Act
     def cat_string(string, file = nil)
       if string
         path = file.path if file
-        @lexer ||= Helper.lexer(path)
+        @lexer ||= Helper.lexer(path, string)
         string = Helper.strip_indentation(string)
         string = Helper.prettify(string, @lexer) if @prettify
-        string = Helper.syntax_highlith(string, @lexer) if self.ansi_output?
+        string = Helper.syntax_highlight(string, @lexer) if self.ansi_output?
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines && file
         UI.puts "\n#{string}"
       else
