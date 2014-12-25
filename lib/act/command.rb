@@ -137,7 +137,7 @@ module Act
         string = Helper.prettify(string, @lexer) if @prettify
         string = Helper.syntax_highlight(string, @lexer) if ansi_output? || @always_color
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines && file
-        UI.puts "\n#{string}"
+        UI.puts UI.tty? ? "\n#{string}" : string
       else
         UI.warn '[!] Nothing to show'
       end
