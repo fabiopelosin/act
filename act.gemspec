@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Act::VERSION
   spec.authors       = ["Fabio Pelosin"]
   spec.email         = ["fabiopelosin@gmail.com"]
-  spec.summary       = %q{Act the command line tool to act on files.}
+  spec.summary       = %q{Act, the command line tool to act on files.}
   spec.homepage      = "https://github.com/irrationalfab/act"
   spec.license       = "MIT"
 
@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "claide", "~> 0.5"
   spec.add_runtime_dependency "colored", "~> 1.2"
+  spec.add_runtime_dependency "rouge", '~> 1.7'
   spec.add_runtime_dependency "activesupport"
 
   spec.add_development_dependency "bundler", "~> 1.5"

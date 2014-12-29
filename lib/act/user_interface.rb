@@ -9,6 +9,10 @@ module Act
     def self.warn(message)
       STDERR.puts message
     end
+
+    def self.tty?
+      STDOUT.tty?
+    end
   end
 
   UI = UserInterface

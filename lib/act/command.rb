@@ -15,7 +15,7 @@ module Act
 
     def self.arguments
       [
-        ['PATH', :optional],
+        CLAide::Argument.new('PATH', false),
       ]
     end
 
@@ -23,6 +23,7 @@ module Act
       [
         ['--open', 'Open the file in $EDITOR instead of printing it'],
         ['--prettify', 'Prettify output'],
+        ['--always-color', 'Always color the output'],
         ['--line-numbers', 'Show output with line numbers'],
         ['--lexer=NAME', 'Use the given lexer'],
       ].concat(super)
@@ -41,6 +42,7 @@ module Act
       @prettify = argv.flag?('prettify', false)
       @number_lines = argv.flag?('line-numbers', false)
       @lexer = argv.option('lexer', false)
+      @always_color = argv.flag?('always-color')
       @file_string = argv.shift_argument
       super
     end
@@ -130,12 +132,12 @@ module Act
     def cat_string(string, file = nil)
       if string
         path = file.path if file
-        @lexer ||= Helper.lexer(path)
+        @lexer ||= Helper.lexer(path, string)
         string = Helper.strip_indentation(string)
         string = Helper.prettify(string, @lexer) if @prettify
-        string = Helper.syntax_highlith(string, @lexer) if self.ansi_output?
+        string = Helper.syntax_highlight(string, @lexer) if ansi_output? || @always_color
         string = Helper.add_line_numbers(string, file.from_line, file.highlight_line) if @number_lines && file
-        UI.puts "\n#{string}"
+        UI.puts UI.tty? ? "\n#{string}" : string
       else
         UI.warn '[!] Nothing to show'
       end
