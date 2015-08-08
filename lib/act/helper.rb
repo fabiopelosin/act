@@ -79,6 +79,14 @@ module Act
       when 'json'
         require 'json'
         JSON.pretty_generate(JSON.parse(string))
+      when 'xml'
+        require 'rexml/document'
+        doc = REXML::Document.new(string)
+        formatter = REXML::Formatters::Pretty.new
+        formatter.compact = true
+        ''.tap do |s|
+          formatter.write(doc, s)
+        end
       else
         string
       end
